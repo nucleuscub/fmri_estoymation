@@ -1,0 +1,32 @@
+3dDeconvolve \
+    -nodata 852 2 \
+    -polort -1 \
+    -concat '1D: 0 142 284 426 568 710' \
+    -num_stimts 4 \
+    -stim_times 1 00003.stimsim.S.pict.1D 'BLOCK(0.5,1)' \
+-stim_label 1 S.pict \
+-stim_times 2 00003.stimsim.T.pict.1D 'BLOCK(0.5,1)' \
+-stim_label 2 T.pict \
+-stim_times 3 00003.stimsim.S.cue.1D 'BLOCK(0.75,1)' \
+-stim_label 3 S.cue \
+-stim_times 4 00003.stimsim.T.cue.1D 'BLOCK(0.75,1)' \
+-stim_label 4 T.cue \
+-num_glt 12 \
+-gltsym 'SYM: S.pict -T.pict' -glt_label 1 S.pict-T.pict \
+-gltsym 'SYM: S.pict -S.cue' -glt_label 2 S.pict-S.cue \
+-gltsym 'SYM: S.pict -T.cue' -glt_label 3 S.pict-T.cue \
+-gltsym 'SYM: T.pict -S.pict' -glt_label 4 T.pict-S.pict \
+-gltsym 'SYM: T.pict -S.cue' -glt_label 5 T.pict-S.cue \
+-gltsym 'SYM: T.pict -T.cue' -glt_label 6 T.pict-T.cue \
+-gltsym 'SYM: S.cue -S.pict' -glt_label 7 S.cue-S.pict \
+-gltsym 'SYM: S.cue -T.pict' -glt_label 8 S.cue-T.pict \
+-gltsym 'SYM: S.cue -T.cue' -glt_label 9 S.cue-T.cue \
+-gltsym 'SYM: T.cue -S.pict' -glt_label 10 T.cue-S.pict \
+-gltsym 'SYM: T.cue -T.pict' -glt_label 11 T.cue-T.pict \
+-gltsym 'SYM: T.cue -S.cue' -glt_label 12 T.cue-S.cue \
+-x1D 00003.stimsim.x1D
+
+
+
+# run durations:
+# 284.0 284.0 284.0 284.0 284.0 284.0

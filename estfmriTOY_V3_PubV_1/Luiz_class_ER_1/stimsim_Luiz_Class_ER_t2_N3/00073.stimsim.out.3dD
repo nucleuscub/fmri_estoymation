@@ -1,0 +1,228 @@
+------------------------------------------------------------
+GLT matrix from 'SYM: T.pict -N.cue':
+   1  -1   0   0   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.pict -N.pict':
+   1   0  -1   0   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.pict -S.pict':
+   1   0   0  -1   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.pict -S.cue':
+   1   0   0   0  -1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.pict -T.cue':
+   1   0   0   0   0  -1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.cue -T.pict':
+  -1   1   0   0   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.cue -N.pict':
+   0   1  -1   0   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.cue -S.pict':
+   0   1   0  -1   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.cue -S.cue':
+   0   1   0   0  -1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.cue -T.cue':
+   0   1   0   0   0  -1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.pict -T.pict':
+  -1   0   1   0   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.pict -N.cue':
+   0  -1   1   0   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.pict -S.pict':
+   0   0   1  -1   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.pict -S.cue':
+   0   0   1   0  -1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: N.pict -T.cue':
+   0   0   1   0   0  -1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.pict -T.pict':
+  -1   0   0   1   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.pict -N.cue':
+   0  -1   0   1   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.pict -N.pict':
+   0   0  -1   1   0   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.pict -S.cue':
+   0   0   0   1  -1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.pict -T.cue':
+   0   0   0   1   0  -1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.cue -T.pict':
+  -1   0   0   0   1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.cue -N.cue':
+   0  -1   0   0   1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.cue -N.pict':
+   0   0  -1   0   1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.cue -S.pict':
+   0   0   0  -1   1   0 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: S.cue -T.cue':
+   0   0   0   0   1  -1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.cue -T.pict':
+  -1   0   0   0   0   1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.cue -N.cue':
+   0  -1   0   0   0   1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.cue -N.pict':
+   0   0  -1   0   0   1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.cue -S.pict':
+   0   0   0  -1   0   1 
+ 
+------------------------------------------------------------
+GLT matrix from 'SYM: T.cue -S.cue':
+   0   0   0   0  -1   1 
+ 
+
+Stimulus: T.pict 
+  h[ 0] norm. std. dev. =   0.1154
+
+Stimulus: N.cue 
+  h[ 0] norm. std. dev. =   0.1151
+
+Stimulus: N.pict 
+  h[ 0] norm. std. dev. =   0.1160
+
+Stimulus: S.pict 
+  h[ 0] norm. std. dev. =   0.1152
+
+Stimulus: S.cue 
+  h[ 0] norm. std. dev. =   0.1153
+
+Stimulus: T.cue 
+  h[ 0] norm. std. dev. =   0.1154
+
+General Linear Test: T.pict-N.cue 
+  LC[0] norm. std. dev. =   0.2057 
+
+General Linear Test: T.pict-N.pict 
+  LC[0] norm. std. dev. =   0.1076 
+
+General Linear Test: T.pict-S.pict 
+  LC[0] norm. std. dev. =   0.1089 
+
+General Linear Test: T.pict-S.cue 
+  LC[0] norm. std. dev. =   0.2055 
+
+General Linear Test: T.pict-T.cue 
+  LC[0] norm. std. dev. =   0.2213 
+
+General Linear Test: N.cue-T.pict 
+  LC[0] norm. std. dev. =   0.2057 
+
+General Linear Test: N.cue-N.pict 
+  LC[0] norm. std. dev. =   0.2217 
+
+General Linear Test: N.cue-S.pict 
+  LC[0] norm. std. dev. =   0.2047 
+
+General Linear Test: N.cue-S.cue 
+  LC[0] norm. std. dev. =   0.1091 
+
+General Linear Test: N.cue-T.cue 
+  LC[0] norm. std. dev. =   0.1074 
+
+General Linear Test: N.pict-T.pict 
+  LC[0] norm. std. dev. =   0.1076 
+
+General Linear Test: N.pict-N.cue 
+  LC[0] norm. std. dev. =   0.2217 
+
+General Linear Test: N.pict-S.pict 
+  LC[0] norm. std. dev. =   0.1094 
+
+General Linear Test: N.pict-S.cue 
+  LC[0] norm. std. dev. =   0.2054 
+
+General Linear Test: N.pict-T.cue 
+  LC[0] norm. std. dev. =   0.2075 
+
+General Linear Test: S.pict-T.pict 
+  LC[0] norm. std. dev. =   0.1089 
+
+General Linear Test: S.pict-N.cue 
+  LC[0] norm. std. dev. =   0.2047 
+
+General Linear Test: S.pict-N.pict 
+  LC[0] norm. std. dev. =   0.1094 
+
+General Linear Test: S.pict-S.cue 
+  LC[0] norm. std. dev. =   0.2213 
+
+General Linear Test: S.pict-T.cue 
+  LC[0] norm. std. dev. =   0.2047 
+
+General Linear Test: S.cue-T.pict 
+  LC[0] norm. std. dev. =   0.2055 
+
+General Linear Test: S.cue-N.cue 
+  LC[0] norm. std. dev. =   0.1091 
+
+General Linear Test: S.cue-N.pict 
+  LC[0] norm. std. dev. =   0.2054 
+
+General Linear Test: S.cue-S.pict 
+  LC[0] norm. std. dev. =   0.2213 
+
+General Linear Test: S.cue-T.cue 
+  LC[0] norm. std. dev. =   0.1089 
+
+General Linear Test: T.cue-T.pict 
+  LC[0] norm. std. dev. =   0.2213 
+
+General Linear Test: T.cue-N.cue 
+  LC[0] norm. std. dev. =   0.1074 
+
+General Linear Test: T.cue-N.pict 
+  LC[0] norm. std. dev. =   0.2075 
+
+General Linear Test: T.cue-S.pict 
+  LC[0] norm. std. dev. =   0.2047 
+
+General Linear Test: T.cue-S.cue 
+  LC[0] norm. std. dev. =   0.1089 
