@@ -1,4 +1,0 @@
-*+ WARNING: '-stim_times 1' file '/home/nucleus/WORK/fMRI_simulator_estimator/scripts/simfmritool/estfmriTOY_V3_PubV_1/Tutorial_files_V1/S_cue.1D' has 6 rows, but dataset has 1 time blocks
-*+ WARNING: '-stim_times 2' file '/home/nucleus/WORK/fMRI_simulator_estimator/scripts/simfmritool/estfmriTOY_V3_PubV_1/Tutorial_files_V1/S_pict.1D' has 6 rows, but dataset has 1 time blocks
-*+ WARNING: '-stim_times 3' file '/home/nucleus/WORK/fMRI_simulator_estimator/scripts/simfmritool/estfmriTOY_V3_PubV_1/Tutorial_files_V1/T_cue.1D' has 6 rows, but dataset has 1 time blocks
-*+ WARNING: '-stim_times 4' file '/home/nucleus/WORK/fMRI_simulator_estimator/scripts/simfmritool/estfmriTOY_V3_PubV_1/Tutorial_files_V1/T_pict.1D' has 6 rows, but dataset has 1 time blocks
