@@ -50,6 +50,36 @@ verifyEqual(tc, h.Table.Data(:, 1)', {'S_cue', 'S_pict', 'T_cue', 'T_pict'});
 verifyEqual(tc, h.Table.Data(:, 2)', {'BLOCK', 'BLOCK', 'BLOCK', 'BLOCK'});
 end
 
+function test_metrics_in_table_and_status(tc)
+h = tc.TestData.h;
+h.setCfg(tc.TestData.tut);
+m = h.getMetrics();
+[X, ~, info] = estfmri.design_matrix(tc.TestData.tut);
+m0 = estfmri.design_metrics(X, info);
+verifyEqual(tc, m.vif, m0.vif);
+verifyEqual(tc, h.Table.Data(:, 4)', arrayfun(@(v) sprintf('%.2f', v), m0.vif, 'UniformOutput', false));
+verifyEqual(tc, h.Table.Data(:, 5)', arrayfun(@(v) sprintf('%.3f', v), m0.se, 'UniformOutput', false));
+verifySubstring(tc, h.status(), 'cond(X)');
+end
+
+function test_collinear_design_flagged(tc)
+% Two classes with identical onsets and HRF -> perfectly collinear.
+h = tc.TestData.h;
+c = tc.TestData.syn;
+c.stims(2).onsets = c.stims(1).onsets;
+c.stims(2).hrf = c.stims(1).hrf;
+h.setCfg(c);
+verifySubstring(tc, h.status(), 'severe collinearity');
+verifySubstring(tc, h.status(), 'rank deficient');
+verifyEqual(tc, h.Table.Data{1, 4}, 'Inf');
+verifyNotEmpty(tc, h.Table.StyleConfigurations);
+% an invalid design clears the metric columns
+h.Runs.Value = 3;
+h.Runs.ValueChangedFcn(h.Runs, []);
+verifyEqual(tc, h.Table.Data(:, 4)', {'', ''});
+verifyEmpty(tc, h.Table.StyleConfigurations);
+end
+
 function test_every_view_renders(tc)
 h = tc.TestData.h;
 h.setCfg(tc.TestData.syn);

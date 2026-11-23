@@ -26,7 +26,7 @@ ip.addParameter('Visible', 'on');
 ip.parse(varargin{:});
 
 VIEWS = {'Stimuli', 'Onsets', 'Response models (HRFs)', 'Regressors', ...
-    'Regressors + stimuli', 'Design matrix', 'Correlation'};
+    'Regressors + stimuli', 'Design matrix', 'Correlation', 'Design metrics'};
 MODELS = {'GAM', 'BLOCK', 'MION', 'MIONN'};
 POLORTS = {'None', 'A', '0', '1', '2', '3', '4', '5'};
 
@@ -36,6 +36,7 @@ S.files  = {};      % per class: source description
 S.X      = [];
 S.labels = {};
 S.info   = [];
+S.metrics = [];
 S.cfg    = [];
 S.error  = '';
 warn_late = {};     % shared by build_cfg/refresh (nested-function scope)
@@ -44,7 +45,7 @@ warn_late = {};     % shared by build_cfg/refresh (nested-function scope)
 fig = uifigure('Name', 'estfmri', 'Position', [80 80 1280 760], ...
     'Visible', ip.Results.Visible);
 main = uigridlayout(fig, [1 2]);
-main.ColumnWidth = {430, '1x'};
+main.ColumnWidth = {480, '1x'};
 
 % Left: experiment
 L = uigridlayout(main, [11 2]);
@@ -75,11 +76,12 @@ hPol.Layout.Row = 8; hPol.Layout.Column = 2;
 l = uilabel(L, 'Text', 'Stimulus classes (edit name, HRF, parameters)', 'FontWeight', 'bold');
 l.Layout.Row = 9; l.Layout.Column = [1 2];
 
-hTable = uitable(L, 'ColumnName', {'Name', 'HRF', 'Params', 'Source'}, ...
-    'ColumnEditable', [true true true false], ...
-    'ColumnFormat', {'char', MODELS, 'char', 'char'}, ...
-    'ColumnWidth', {90, 70, 80, 'auto'}, ...
-    'RowName', {}, 'Data', cell(0, 4), ...
+% VIF and SE/sigma (SD of beta per unit noise SD) are filled by refresh().
+hTable = uitable(L, 'ColumnName', {'Name', 'HRF', 'Params', 'VIF', ['SE/' char(963)], 'Source'}, ...
+    'ColumnEditable', [true true true false false false], ...
+    'ColumnFormat', {'char', MODELS, 'char', 'char', 'char', 'char'}, ...
+    'ColumnWidth', {80, 70, 75, 45, 50, 'auto'}, ...
+    'RowName', {}, 'Data', cell(0, 6), ...
     'CellEditCallback', @on_table_edit);
 hTable.Layout.Row = 10; hTable.Layout.Column = [1 2];
 
@@ -113,6 +115,7 @@ h.views     = VIEWS;
 h.setCfg    = @set_cfg;
 h.getCfg    = @get_cfg;       % nested handles see live state
 h.getDesign = @get_design;
+h.getMetrics = @get_metrics;
 h.showView  = @show_view;
 h.status    = @get_status;
 h.Table     = hTable;
@@ -137,7 +140,7 @@ end
         hRuns.Value = c.num_runs;
         hPol.Value = polort_to_item(c.polort);
         K = numel(c.stims);
-        data = cell(K, 4);
+        data = cell(K, 6);
         S.rows = cell(1, K);
         S.files = cell(1, K);
         for k = 1:K
@@ -146,7 +149,7 @@ end
             if ~iscell(on), on = {on}; end
             S.rows{k} = on;
             S.files{k} = sprintf('cfg (%d run rows)', numel(on));
-            data(k, :) = {c.stims(k).name, spec.model, params_to_text(spec.params), S.files{k}};
+            data(k, :) = {c.stims(k).name, spec.model, params_to_text(spec.params), '', '', S.files{k}};
         end
         hTable.Data = data;
         refresh();
@@ -208,18 +211,25 @@ end
             [S.X, S.labels, S.info] = estfmri.design_matrix(c);
             S.cfg = c;
             S.error = '';
+            S.metrics = estfmri.design_metrics(S.X, S.info);
+            m = S.metrics;
             msg = {sprintf('X: %d samples x %d columns (%d baseline, %d stimulus).', ...
-                size(S.X, 1), size(S.X, 2), S.info.nbase, S.info.nstim)};
-            Rc = corrcoef(S.X(:, S.info.nbase + 1:end));
+                size(S.X, 1), size(S.X, 2), S.info.nbase, S.info.nstim), ...
+                sprintf('cond(X) = %s', num2str(m.cond, 4))};
             if S.info.nstim > 1
-                off = abs(Rc(~eye(S.info.nstim)));
-                msg{end+1} = sprintf('Max |r| between stimulus regressors: %.2f', max(off));
+                msg{end+1} = sprintf('Max |r| between stimulus regressors: %.2f', max(m.max_abs_r));
             end
-            hStatus.Value = [msg, warn_late];
+            names = S.labels(S.info.nbase + 1:end);
+            for k = find(~strcmp(m.level, 'ok'))
+                msg{end+1} = sprintf('%s: VIF %.1f (%s collinearity)', names{k}, m.vif(k), m.level{k}); %#ok<AGROW>
+            end
+            fill_metrics_columns();
+            hStatus.Value = [msg, m.warnings, warn_late];
             hStatus.FontColor = [0 0 0];
             render();
         catch err
-            S.cfg = []; S.X = []; S.info = []; S.labels = {};
+            S.cfg = []; S.X = []; S.info = []; S.labels = {}; S.metrics = [];
+            clear_metrics_columns();
             S.error = err.message;
             hStatus.Value = {err.message};
             hStatus.FontColor = [0.75 0 0];
@@ -249,7 +259,36 @@ end
                 estfmri.plot_design_matrix(X, labs, info, 'ShowBaseline', base, 'TR', c.TR, 'Parent', parent);
             case 'Correlation'
                 estfmri.plot_correlation(X, labs, info, 'ShowBaseline', base, 'Parent', parent);
+            case 'Design metrics'
+                estfmri.plot_design_metrics(S.metrics, labs(info.nbase + 1:end), 'Parent', parent);
         end
+    end
+
+    function fill_metrics_columns()
+        m = S.metrics;
+        data = hTable.Data;
+        removeStyle(hTable);
+        colours = struct('high', [1 0.85 0.55], 'severe', [1 0.6 0.6]);
+        for k = 1:size(data, 1)
+            data{k, 4} = fmt_num(m.vif(k), '%.2f');
+            data{k, 5} = fmt_num(m.se(k), '%.3f');
+            if ~strcmp(m.level{k}, 'ok')
+                addStyle(hTable, uistyle('BackgroundColor', colours.(m.level{k})), 'cell', [k 4]);
+            end
+        end
+        hTable.Data = data;
+    end
+
+    function clear_metrics_columns()
+        data = hTable.Data;
+        if isempty(data), return; end
+        data(:, 4:5) = {''};
+        hTable.Data = data;
+        removeStyle(hTable);
+    end
+
+    function m = get_metrics()
+        m = S.metrics;
     end
 
     function alert(msg, ttl)
@@ -291,7 +330,7 @@ end
         if isequal(f, 0), return; end
         f = cellstr(f);
         K = numel(f);
-        data = cell(K, 4);
+        data = cell(K, 6);
         S.rows = cell(1, K);
         S.files = cell(1, K);
         for k = 1:K
@@ -304,7 +343,7 @@ end
             [~, name] = fileparts(f{k});
             S.rows{k} = rows;
             S.files{k} = sprintf('%s (%d rows)', f{k}, numel(rows));
-            data(k, :) = {name, 'GAM', default_params('GAM'), S.files{k}};
+            data(k, :) = {name, 'GAM', default_params('GAM'), '', '', S.files{k}};
         end
         hTable.Data = data;
         refresh();
@@ -356,6 +395,10 @@ if isempty(params)
 else
     s = sprintf('%s(%s)', model, params);
 end
+end
+
+function t = fmt_num(x, fmt)
+if isfinite(x), t = sprintf(fmt, x); else, t = 'Inf'; end
 end
 
 function t = params_to_text(p)
