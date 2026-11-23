@@ -4,18 +4,20 @@ function fig = plot_design_matrix(X, labels, info, varargin)
 %   fig = estfmri.plot_design_matrix(X, labels, info, 'ShowBaseline', true, 'TR', 2)
 %   By default only the stimulus columns are shown (as the legacy GUI did).
 %   With 'TR' the vertical axis is time in seconds, otherwise sample index.
+%   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
 
 ip = inputParser;
 ip.addParameter('ShowBaseline', false, @islogical);
 ip.addParameter('TR', [], @(x) isempty(x) || isscalar(x));
+ip.addParameter('Parent', [], @(p) isempty(p) || isgraphics(p));
 ip.parse(varargin{:});
 
 cols = select_columns(info, ip.Results.ShowBaseline);
 Xp = X(:, cols);
 labs = labels(cols);
 
-fig = figure('Name', 'Design matrix', 'Color', 'w');
-ax = axes(fig);
+[ctr, fig] = estfmri.prepare_container(ip.Results.Parent, 'Design matrix');
+ax = axes(ctr);
 if isempty(ip.Results.TR)
     y = 1:size(X, 1);
     ylab = 'Sample';

@@ -7,9 +7,11 @@ function [fig, R] = plot_correlation(X, labels, info, varargin)
 %   names on the diagonal. Clicking an off-diagonal cell opens
 %   estfmri.plot_regressor_pair for that pair. R is the signed matrix.
 %   Constant columns (e.g. a Pol#0 baseline) give NaN correlations.
+%   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
 
 ip = inputParser;
 ip.addParameter('ShowBaseline', false, @islogical);
+ip.addParameter('Parent', [], @(p) isempty(p) || isgraphics(p));
 ip.parse(varargin{:});
 
 if ip.Results.ShowBaseline
@@ -22,8 +24,8 @@ labs = labels(cols);
 n = numel(cols);
 R = corrcoef(Xp);
 
-fig = figure('Name', 'Regressor correlation', 'Color', 'w');
-ax = axes(fig);
+[ctr, fig] = estfmri.prepare_container(ip.Results.Parent, 'Regressor correlation');
+ax = axes(ctr);
 im = imagesc(ax, abs(R), [0 1]);
 im.Tag = 'corr_image';
 colormap(ax, parula);

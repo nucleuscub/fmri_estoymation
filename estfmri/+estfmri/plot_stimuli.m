@@ -8,10 +8,12 @@ function fig = plot_stimuli(cfg, varargin)
 %     'Stims' : indices into cfg.stims to show (default: all)
 %   One tile per class plus an 'All' overlay. Time in seconds over the
 %   concatenated runs; dashed lines mark run boundaries.
+%   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
 
 ip = inputParser;
 ip.addParameter('Style', 'boxcar', @(s) any(strcmpi(s, {'boxcar', 'onset'})));
 ip.addParameter('Stims', 1:numel(cfg.stims), @isnumeric);
+ip.addParameter('Parent', [], @(p) isempty(p) || isgraphics(p));
 ip.parse(varargin{:});
 style = lower(ip.Results.Style);
 idx = ip.Results.Stims(:)';
@@ -21,8 +23,8 @@ runlen = cfg.npts * cfg.TR;
 total = runlen * cfg.num_runs;
 cmap = lines(max(K, 1));
 
-fig = figure('Name', sprintf('Stimuli (%s)', style), 'Color', 'w');
-tl = tiledlayout(fig, K + 1, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
+[ctr, fig] = estfmri.prepare_container(ip.Results.Parent, sprintf('Stimuli (%s)', style));
+tl = tiledlayout(ctr, K + 1, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 if strcmp(style, 'boxcar')
     title(tl, 'Stimulus');
 else

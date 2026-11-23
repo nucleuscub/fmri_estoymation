@@ -5,10 +5,12 @@ function fig = plot_regressors(cfg, X, info, varargin)
 %   X, info come from estfmri.design_matrix(cfg). One tile per class plus
 %   an 'All' overlay; with 'ShowStimuli' the stimulus boxcars are drawn
 %   underneath in grey.
+%   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
 
 ip = inputParser;
 ip.addParameter('ShowStimuli', false, @islogical);
 ip.addParameter('Stims', 1:info.nstim, @isnumeric);
+ip.addParameter('Parent', [], @(p) isempty(p) || isgraphics(p));
 ip.parse(varargin{:});
 idx = ip.Results.Stims(:)';
 showStim = ip.Results.ShowStimuli;
@@ -21,8 +23,8 @@ cmap = lines(max(K, 1));
 ymax = max(1, max(max(S(:, idx)))) * 1.05;
 ymin = min(0, min(min(S(:, idx)))) * 1.05;
 
-fig = figure('Name', 'Convolved regressors', 'Color', 'w');
-tl = tiledlayout(fig, K + 1, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
+[ctr, fig] = estfmri.prepare_container(ip.Results.Parent, 'Convolved regressors');
+tl = tiledlayout(ctr, K + 1, 1, 'TileSpacing', 'compact', 'Padding', 'compact');
 if showStim
     title(tl, 'Convolved regressors + stimuli');
 else

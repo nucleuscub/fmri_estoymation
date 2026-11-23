@@ -1,11 +1,15 @@
-function [fig, stats] = plot_regressor_pair(X, i, j, labels)
+function [fig, stats] = plot_regressor_pair(X, i, j, labels, varargin)
 %PLOT_REGRESSOR_PAIR Compare two regressors: scatter + linear fit + time courses.
 %   [fig, stats] = estfmri.plot_regressor_pair(X, i, j, labels)
 %   Plots column j against column i with the least-squares line
 %   X(:,j) ~ slope*X(:,i) + intercept and the identity line, and both time
 %   courses underneath. stats has fields r, slope, intercept.
+%   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
 %   Replaces the legacy regplot.m (no Deep Learning Toolbox needed).
 
+ip = inputParser;
+ip.addParameter('Parent', [], @(p) isempty(p) || isgraphics(p));
+ip.parse(varargin{:});
 if nargin < 4 || isempty(labels)
     labels = arrayfun(@(k) sprintf('Reg_%d', k), 1:size(X, 2), 'UniformOutput', false);
 end
@@ -17,8 +21,8 @@ stats.r = c(1, 2);
 stats.slope = pf(1);
 stats.intercept = pf(2);
 
-fig = figure('Name', sprintf('%s vs %s', labels{j}, labels{i}), 'Color', 'w');
-tl = tiledlayout(fig, 1, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
+[ctr, fig] = estfmri.prepare_container(ip.Results.Parent, sprintf('%s vs %s', labels{j}, labels{i}));
+tl = tiledlayout(ctr, 1, 3, 'TileSpacing', 'compact', 'Padding', 'compact');
 
 ax1 = nexttile(tl, 1);
 lim = [min([x; y]), max([x; y])];
