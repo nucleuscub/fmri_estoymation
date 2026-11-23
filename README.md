@@ -158,3 +158,12 @@ estfmri/
 2. Simulation views: beta histograms, noisy vs fitted signals, model error.
 3. Simulation tab in the app, with interactive viewers.
 4. Validate `GAM`, `MION` and the baseline polynomials against AFNI output.
+
+## License
+
+MIT (see [LICENSE](LICENSE)). You may use, modify and redistribute the code,
+including commercially, as long as the copyright notice and licence text are
+kept with it.
+
+If estfmri helps your work, please credit it as: *estfmri (R. Martinez-Cancino),
+a native MATLAB rewrite of estfmriTOY, https://github.com/nucleuscub/fmri_estoymation*.
