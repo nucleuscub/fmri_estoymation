@@ -1,7 +1,7 @@
 function d = stim_duration(hrfspec)
 %STIM_DURATION Display duration (s) of a stimulus for a given HRF model.
 %   d = estfmri.stim_duration('BLOCK(0.75,1)')  % -> 0.75
-%   Used only to draw stimulus boxcars. Follows the legacy HRF dialog:
+%   Used only to draw stimulus boxcars:
 %     BLOCK(d,...), MION(d), MIONN(d) -> d
 %     GAM(p,q,d)                      -> d
 %     GAM(p,q) / GAM                  -> 2.3*sqrt(p)*q  (approx. FWHM)

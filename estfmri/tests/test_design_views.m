@@ -9,13 +9,10 @@ function setupOnce(tc)
 here = fileparts(mfilename('fullpath'));
 repo = fileparts(fileparts(here));
 addpath(fullfile(repo, 'estfmri'));
-legacy = fullfile(repo, 'estfmriTOY_V3_PubV_1');
-
 tc.TestData.oldVisible = get(groot, 'DefaultFigureVisible');
 set(groot, 'DefaultFigureVisible', 'off');
 
-s = load(fullfile(legacy, 'ER_tutorial_config_file.mat'));
-tut = estfmri.cfg_from_legacy_opts(s.opts, fullfile(legacy, 'timings'));
+tut = estfmri.tutorial();
 [X, labels, info] = estfmri.design_matrix(tut);
 tc.TestData.tut = struct('cfg', tut, 'X', X, 'labels', {labels}, 'info', info);
 

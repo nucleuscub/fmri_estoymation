@@ -5,7 +5,7 @@ function [fig, stats] = plot_regressor_pair(X, i, j, labels, varargin)
 %   X(:,j) ~ slope*X(:,i) + intercept and the identity line, and both time
 %   courses underneath. stats has fields r, slope, intercept.
 %   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
-%   Replaces the legacy regplot.m (no Deep Learning Toolbox needed).
+%   Uses polyfit/corrcoef only (no extra toolboxes).
 
 ip = inputParser;
 ip.addParameter('Parent', [], @(p) isempty(p) || isgraphics(p));

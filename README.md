@@ -4,18 +4,18 @@ Tools for exploring fMRI event-related designs and how well a GLM can recover
 the betas: build the design matrix from stimulus timings, inspect regressors and
 their collinearity, and (coming next) simulate noisy data and re-estimate.
 
-The repository has two parts:
+The toolbox, `estfmri/`, is plain MATLAB functions plus a `uifigure` app. It
+needs neither AFNI nor GUIDE and runs on Windows, macOS and Linux.
 
-| Folder | What it is | Status |
-|---|---|---|
-| `estfmri/` | **estfmri toolbox**: plain MATLAB functions + a `uifigure` app. No AFNI, no GUIDE, runs on Windows. | Active (branch `develop`) |
-| `estfmriTOY_V3_PubV_1/` | Original 2013–14 GUIDE tool (R. Martinez-Cancino, Maryland Neuroimaging Center). Calls AFNI `3dDeconvolve` through `unix()`. | Legacy, kept for reference |
+It is a rewrite of **estfmriTOY** (R. Martinez-Cancino, Maryland Neuroimaging
+Center, 2013–14), a GUIDE application that called AFNI `3dDeconvolve`. The
+original code is no longer part of this branch; it remains in the git history
+(the `master` branch). Configs saved by it (`*_config_file.mat`) can still be
+opened: see `estfmri.cfg_from_legacy_opts` or **File > Open...** in the app.
 
 ## Requirements
 
 - MATLAB R2020a or newer (tested on R2024a). No extra toolboxes.
-- The legacy tool additionally needs Linux/macOS with AFNI on the `PATH`, and the
-  Statistics, Communications, Image Processing and Deep Learning toolboxes.
 
 ## Tutorial
 
@@ -29,9 +29,9 @@ estfmri.app
 ```
 
 Then choose **File > Open...** (Ctrl+O) and pick
-`estfmriTOY_V3_PubV_1/ER_tutorial_config_file.mat` (the tutorial: 4 stimulus
-classes, TR = 2 s, 210 volumes, 1 run). Timing files are found in the
-`timings/` folder next to it.
+`estfmri/data/tutorial/tutorial_cfg.mat` (the bundled tutorial: 4 stimulus
+classes, TR = 2 s, 210 volumes, 1 run). You can also start it directly with
+`estfmri.app(estfmri.tutorial())`.
 
 - **Acquisition** (top left): repetition time, volumes per run, runs and
   baseline drift (the AFNI `-polort` order; *Auto* shows the order it picks).
@@ -57,8 +57,7 @@ classes, TR = 2 s, 210 volumes, 1 run). Timing files are found in the
 
 ```matlab
 addpath('estfmri');
-s   = load('estfmriTOY_V3_PubV_1/ER_tutorial_config_file.mat');
-cfg = estfmri.cfg_from_legacy_opts(s.opts, 'estfmriTOY_V3_PubV_1/timings');
+cfg = estfmri.tutorial();                          % the bundled tutorial design
 
 [X, labels, info] = estfmri.design_matrix(cfg);   % 210 x 4, no AFNI needed
 
@@ -88,9 +87,9 @@ cfg.npts     = 210;    % volumes per run
 cfg.num_runs = 1;
 cfg.polort   = 'A';    % baseline: -1 (none), 'A' (auto) or a degree 0..5
 
-on = estfmri.read_timings('estfmriTOY_V3_PubV_1/timings/S_cue.1D');
+on = estfmri.read_timings('estfmri/data/tutorial/timings/S_cue.1D');
 cfg.stims(1) = struct('name', 'cue',  'onsets', {on(1)}, 'hrf', 'BLOCK(0.75,1)');
-on = estfmri.read_timings('estfmriTOY_V3_PubV_1/timings/S_pict.1D');
+on = estfmri.read_timings('estfmri/data/tutorial/timings/S_pict.1D');
 cfg.stims(2) = struct('name', 'pict', 'onsets', {on(1)}, 'hrf', 'GAM');
 
 [X, labels, info] = estfmri.design_matrix(cfg);
@@ -131,9 +130,9 @@ results = runtests('estfmri/tests');
 table(results)
 ```
 
-The suite checks the native design matrix against the AFNI output stored in
-the tutorial config, the plots, the metrics (including a Monte Carlo check of
-the SE) and the app (run headless).
+The suite checks the native design matrix against the design matrix AFNI
+produced for the tutorial (bundled in `estfmri/data/tutorial`), the plots, the
+metrics (including a Monte Carlo check of the SE) and the app (run headless).
 
 ## Toolbox layout
 
@@ -142,18 +141,20 @@ estfmri/
   +estfmri/            package: call as estfmri.<name>
     design_matrix.m    cfg -> X (baseline + convolved stimulus columns)
     hrf.m, parse_hrf.m, stim_regressor.m, baseline.m, read_timings.m
-    cfg_from_legacy_opts.m   legacy *_config_file.mat -> cfg
     design_metrics.m   VIF, beta SE, efficiency, cond(X)
     plot_*.m           views; each accepts 'Parent' to draw into a panel
     app.m              uifigure front end
+    tutorial.m         loads the bundled tutorial design
+    cfg_from_legacy_opts.m   estfmriTOY *_config_file.mat -> cfg
+  data/tutorial/       tutorial timing files, cfg and the AFNI reference X
   examples/            demo_design_matrix.m, demo_design_views.m
   tests/               matlab.unittest function-based tests
 ```
 
 ## Roadmap
 
-1. Native estimation and simulation (replacing `estimatex.m` and AFNI's fit):
-   noisy signals at a given SNR, many iterations, full vs partial models.
+1. Native estimation and simulation (replacing AFNI's fit): noisy signals at a
+   given SNR, many iterations, full vs partial models.
 2. Simulation views: beta histograms, noisy vs fitted signals, model error.
 3. Simulation tab in the app, with interactive viewers.
 4. Validate `GAM`, `MION` and the baseline polynomials against AFNI output.

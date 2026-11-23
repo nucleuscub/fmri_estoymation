@@ -9,16 +9,17 @@ function setupOnce(tc)
 here = fileparts(mfilename('fullpath'));
 repo = fileparts(fileparts(here));
 addpath(fullfile(repo, 'estfmri'));
-tc.TestData.legacy = fullfile(repo, 'estfmriTOY_V3_PubV_1');
+tc.TestData.data = fullfile(repo, 'estfmri', 'data', 'tutorial');
 end
 
 % --- Validation against AFNI output --------------------------------------
 
 function test_tutorial_matches_afni(tc)
-% opts.X in the tutorial config was produced by AFNI 3dDeconvolve -nodata.
-s = load(fullfile(tc.TestData.legacy, 'ER_tutorial_config_file.mat'));
+% opts.X in the bundled 2014 tutorial config was produced by AFNI
+% 3dDeconvolve -nodata; this also exercises the legacy-config importer.
+s = load(fullfile(tc.TestData.data, 'ER_tutorial_config_file.mat'));
 opts = s.opts;
-cfg = estfmri.cfg_from_legacy_opts(opts, fullfile(tc.TestData.legacy, 'timings'));
+cfg = estfmri.cfg_from_legacy_opts(opts, fullfile(tc.TestData.data, 'timings'));
 [X, labels, info] = estfmri.design_matrix(cfg);
 
 verifySize(tc, X, size(opts.X));
@@ -30,6 +31,18 @@ for k = 1:size(X, 2)
         sprintf('Column %d (%s, %s) differs from AFNI by %.3g', ...
         k, labels{k}, cfg.stims(min(k, end)).hrf, err));
 end
+end
+
+function test_bundled_tutorial_cfg(tc)
+% estfmri.tutorial() must give the same design as importing the 2014 config,
+% and return the AFNI reference X.
+s = load(fullfile(tc.TestData.data, 'ER_tutorial_config_file.mat'));
+imported = estfmri.cfg_from_legacy_opts(s.opts, fullfile(tc.TestData.data, 'timings'));
+[cfg, X_afni, folder] = estfmri.tutorial();
+verifyEqual(tc, cfg, imported);
+verifyEqual(tc, X_afni, s.opts.X);
+verifyTrue(tc, isfolder(fullfile(folder, 'timings')));
+verifyLessThan(tc, max(abs(estfmri.design_matrix(cfg) - X_afni), [], 'all'), 1e-4);
 end
 
 % --- HRF shapes -----------------------------------------------------------

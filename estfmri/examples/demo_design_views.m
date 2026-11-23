@@ -1,15 +1,13 @@
 %DEMO_DESIGN_VIEWS All design-stage views for the tutorial, without GUIDE.
 %   run('estfmri/examples/demo_design_views.m')
-%   Builds X for ER_tutorial_config_file.mat and shows every design view.
+%   Builds X for the bundled tutorial design and shows every design view.
 %   PNG copies are written to <tempdir>/estfmri_design_views/.
 
 here   = fileparts(mfilename('fullpath'));
 repo   = fileparts(fileparts(here));
-legacy = fullfile(repo, 'estfmriTOY_V3_PubV_1');
 addpath(fullfile(repo, 'estfmri'));
 
-s = load(fullfile(legacy, 'ER_tutorial_config_file.mat'));
-cfg = estfmri.cfg_from_legacy_opts(s.opts, fullfile(legacy, 'timings'));
+cfg = estfmri.tutorial();
 [X, labels, info] = estfmri.design_matrix(cfg);
 
 figs = struct();

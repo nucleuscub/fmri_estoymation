@@ -1,0 +1,6 @@
+# MATLAB autosave and editor backups
+*.asv
+*.m~
+
+# Exported reports and scratch output
+report/

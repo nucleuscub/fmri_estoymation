@@ -2,7 +2,7 @@ function fig = plot_design_matrix(X, labels, info, varargin)
 %PLOT_DESIGN_MATRIX Image of the design matrix.
 %   fig = estfmri.plot_design_matrix(X, labels, info)
 %   fig = estfmri.plot_design_matrix(X, labels, info, 'ShowBaseline', true, 'TR', 2)
-%   By default only the stimulus columns are shown (as the legacy GUI did).
+%   By default only the stimulus columns are shown.
 %   With 'TR' the vertical axis is time in seconds, otherwise sample index.
 %   Option 'Parent': figure/uipanel/uitab to draw into (default: new figure).
 

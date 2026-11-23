@@ -11,10 +11,7 @@ function setupOnce(tc)
 here = fileparts(mfilename('fullpath'));
 repo = fileparts(fileparts(here));
 addpath(fullfile(repo, 'estfmri'));
-legacy = fullfile(repo, 'estfmriTOY_V3_PubV_1');
-tc.TestData.legacy = legacy;
-s = load(fullfile(legacy, 'ER_tutorial_config_file.mat'));
-tc.TestData.tut = estfmri.cfg_from_legacy_opts(s.opts, fullfile(legacy, 'timings'));
+[tc.TestData.tut, ~, tc.TestData.data] = estfmri.tutorial();
 
 syn.TR = 2; syn.npts = 80; syn.num_runs = 2; syn.polort = 1;
 syn.stims(1) = struct('name', 'A', 'onsets', {{[10 60 100], [20 90]}}, 'hrf', 'BLOCK(3,1)');
@@ -180,7 +177,7 @@ end
 
 function test_add_remove_move_classes(tc)
 h = tc.TestData.h;
-t = fullfile(tc.TestData.legacy, 'timings');
+t = fullfile(tc.TestData.data, 'timings');
 h.importTimingFiles({fullfile(t, 'S_cue.1D'), fullfile(t, 'T_cue.1D')});
 verifyEqual(tc, {h.getCfg().stims.name}, {'S_cue', 'T_cue'});
 verifyEqual(tc, h.getCfg().stims(1).hrf, 'GAM(8.6,0.547)');
@@ -247,11 +244,19 @@ end
 
 function test_open_legacy_config(tc)
 h = tc.TestData.h;
-h.openFile(fullfile(tc.TestData.legacy, 'ER_tutorial_config_file.mat'));
+h.openFile(fullfile(tc.TestData.data, 'ER_tutorial_config_file.mat'));
 verifyEqual(tc, {h.getCfg().stims.name}, {'S_cue', 'S_pict', 'T_cue', 'T_pict'});
 verifySubstring(tc, h.Figure.Name, 'ER_tutorial_config_file.mat');
 h.selectClass(1);
 verifyEqual(tc, h.getCfg().stims(1).hrf, 'BLOCK(0.75,1)');
+end
+
+function test_open_bundled_tutorial_cfg(tc)
+h = tc.TestData.h;
+h.openFile(fullfile(tc.TestData.data, 'tutorial_cfg.mat'));
+verifyEqual(tc, h.getCfg(), tc.TestData.tut);
+verifySubstring(tc, h.Figure.Name, 'tutorial_cfg.mat');
+verifyFalse(tc, h.isDirty());
 end
 
 function test_open_bad_file(tc)
