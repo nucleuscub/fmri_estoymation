@@ -28,21 +28,30 @@ addpath('estfmri');
 estfmri.app
 ```
 
-Then click **Open config...** and choose
+Then choose **File > Open...** (Ctrl+O) and pick
 `estfmriTOY_V3_PubV_1/ER_tutorial_config_file.mat` (the tutorial: 4 stimulus
 classes, TR = 2 s, 210 volumes, 1 run). Timing files are found in the
 `timings/` folder next to it.
 
-- **Left**: experiment settings (TR, points per run, runs, baseline polynomial
-  order) and one row per stimulus class with its response model (HRF) and
-  parameters. Every edit rebuilds the design matrix immediately.
-- **VIF / SE/σ columns** and the **status box** report design quality (see
-  step 4); problem classes are highlighted.
-- **Right**: pick a view (stimuli, onsets, HRF shapes, regressors, design
-  matrix, correlation, design metrics). In the correlation view, click a cell
-  to compare that pair of regressors. **Open in window** pops the view out.
-- **Save config...** stores everything (including the onsets) in one `.mat`
-  that `estfmri.app(cfg)` or **Open config...** can reload.
+- **Acquisition** (top left): repetition time, volumes per run, runs and
+  baseline drift (the AFNI `-polort` order; *Auto* shows the order it picks).
+- **Stimulus classes**: one row per class with its response model, **VIF** and
+  **SE/σ** (see step 4); high and severe VIF cells are coloured. Double-click a
+  name to rename it; **+ − ↑ ↓** add a class from a timing file, remove it or
+  reorder.
+- **Response model** (bottom left): the selected class's model (Block, Gamma,
+  MION) with labelled parameters in seconds and a live preview of the curve.
+- **Design tab** (right): choose a view from the list (stimuli, onsets, HRF
+  shapes, regressors, design matrix, correlation, design quality). Options for
+  the current view sit above the plot; **Pop out** opens it in its own window.
+  In the correlation view, click a cell to compare that pair of regressors.
+- **Status bar**: design summary, warning count (hover for the list) and save
+  state. The title shows the file name, with `*` for unsaved changes.
+- Every edit rebuilds the design matrix immediately.
+- **File > Import timing files...** (Ctrl+I) starts a design from `.1D`
+  files; **Save** (Ctrl+S) stores everything, onsets included, in one `.mat`;
+  **Export report...** (Ctrl+E) writes the config, every view as PNG and a
+  `summary.txt` with the metrics to a folder.
 
 ### 2. Same thing from a script
 
